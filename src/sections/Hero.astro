@@ -1,0 +1,58 @@
+---
+import { home, ui, stores, type Lang } from '../data/site';
+import { asset } from '../lib/paths';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const c = home[lang];
+const t = ui[lang];
+const s = stores.eulwangni;
+---
+
+<section class="hero" id="top" data-hero>
+  <div class="hero__pin" data-theme="light">
+    <div class="hero__media" data-hero-media data-theme="dark">
+      <video
+        class="hero__video"
+        data-autoplay
+        muted
+        loop
+        playsinline
+        preload="auto"
+        poster={asset('media/hero-poster.jpg')}
+        aria-hidden="true"
+      >
+        <source src={asset('media/hero-mobile.mp4')} type="video/mp4" media="(max-width: 767px)" />
+        <source src={asset('media/hero.mp4')} type="video/mp4" />
+      </video>
+      <div class="hero__shade" data-hero-shade></div>
+    </div>
+
+    <div class="hero__stage" data-theme="dark">
+    <div class="hero__intro" data-hero-intro>
+      <p class="eyebrow" data-hero-in>{c.heroEyebrow}</p>
+      <h1 class="hero__title">
+        <span class="hero__line"><span data-hero-in>BECLASSY</span></span>
+        <span class="hero__line hero__line--sub"><span data-hero-in>THAN BE TRENDY</span></span>
+      </h1>
+      <p class="hero__sub" data-hero-in>{c.heroSub}</p>
+    </div>
+
+    <div class="hero__meta" data-hero-meta>
+      <p><span class="label">{t.open}</span> {s.open} — {s.close}</p>
+      <p class="hero__scroll" aria-hidden="true"><span>{t.scroll}</span><i></i></p>
+      <button class="video-toggle" type="button" data-video-toggle aria-pressed="false"
+        data-label-pause={t.pause} data-label-play={t.play}>
+        <span class="sr-only">{t.pause}</span>
+        <span class="video-toggle__icon" aria-hidden="true"></span>
+      </button>
+    </div>
+    </div>
+
+    <div class="hero__editorial" data-hero-editorial>
+      <p class="label label--line">{c.arriveLabel}</p>
+      <h2 class="kr-title" set:html={c.arriveTitle} />
+      <p class="body-text">{c.arriveBody}</p>
+    </div>
+  </div>
+</section>

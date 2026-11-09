@@ -1,0 +1,13 @@
+---
+import wordmark from '../assets/logo/wordmark.svg?raw';
+import lockup from '../assets/logo/lockup.svg?raw';
+
+interface Props {
+  variant?: 'wordmark' | 'lockup';
+  class?: string;
+}
+const { variant = 'wordmark', class: className } = Astro.props;
+const svg = (variant === 'lockup' ? lockup : wordmark).replace('<svg ', '<svg aria-hidden="true" focusable="false" ');
+---
+
+<span class:list={['logo', `logo--${variant}`, className]} set:html={svg} />

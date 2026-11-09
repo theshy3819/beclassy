@@ -1,0 +1,55 @@
+---
+import Img from '../components/Img.astro';
+import { home, type Lang } from '../data/site';
+import { asset } from '../lib/paths';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const c = home[lang];
+---
+
+<section class="arch" id="architecture" data-theme="dark">
+  <div class="arch__head container">
+    <p class="label label--line" data-reveal>{c.archLabel}</p>
+    <h2 class="display" data-split set:html={c.archTitle} />
+    <div class="arch__intro">
+      <p class="kr-title kr-title--sm" data-reveal>{c.archKr}</p>
+      <p class="body-text" data-reveal>{c.archBody}</p>
+    </div>
+  </div>
+
+  <div class="arch__reveal" data-arch-reveal>
+    <div class="arch__sticky">
+      <div class="arch__frame" data-arch-frame>
+        <Img name="ext-monolith" alt={lang === 'ko' ? 'BECLASSY 레터링이 새겨진 을왕리점 검은 매스 외관' : 'The black monolith of BECLASSY Eulwangni with its lettering'} sizes="100vw" />
+      </div>
+    </div>
+  </div>
+
+  <ul class="arch__stats container">
+    {c.stats.map((s) => (
+      <li data-reveal>
+        <span class="arch__value">{s.value}</span>
+        <span class="arch__unit">{s.unit}</span>
+        <span class="arch__label">{s.label}</span>
+      </li>
+    ))}
+  </ul>
+
+  <div class="arch__grid container">
+    <figure class="arch__cell arch__cell--video" data-reveal="img">
+      <video class="cover" data-autoplay muted loop playsinline preload="none" poster={asset('media/oculus-poster.jpg')} aria-hidden="true">
+        <source src={asset('media/oculus.mp4')} type="video/mp4" />
+      </video>
+    </figure>
+    <figure class="arch__cell arch__cell--tall" data-reveal="img">
+      <Img name="ext-gate" alt={lang === 'ko' ? '원형 개구부가 있는 노출 콘크리트 진입 게이트' : 'Board-formed concrete entrance gate with a round opening'} sizes="(max-width: 767px) 100vw, 34vw" class="cover" />
+    </figure>
+    <figure class="arch__cell arch__cell--wide" data-reveal="img">
+      <video class="cover" data-autoplay muted loop playsinline preload="none" poster={asset('media/atrium-poster.jpg')} aria-hidden="true">
+        <source src={asset('media/atrium.mp4')} type="video/mp4" />
+      </video>
+    </figure>
+    <figcaption class="arch__caption" data-reveal>{c.archCaption}</figcaption>
+  </div>
+</section>

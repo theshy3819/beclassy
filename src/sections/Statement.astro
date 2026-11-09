@@ -1,0 +1,11 @@
+---
+import { home, type Lang } from '../data/site';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+---
+
+<section class="statement" data-theme="light">
+  <div class="container">
+    <p class="statement__text" data-words>{home[lang].statement}</p>
+  </div>
+</section>

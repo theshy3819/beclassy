@@ -1,0 +1,45 @@
+---
+import Img from '../components/Img.astro';
+import StoreActions from '../components/StoreActions.astro';
+import { stores, home, ui, type Lang } from '../data/site';
+import { href } from '../lib/paths';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const c = home[lang];
+const t = ui[lang];
+const cards = [
+  { s: stores.eulwangni, img: 'ext-monolith-tall', main: true },
+  { s: stores.naju, img: 'naju-sunset', main: false },
+];
+---
+
+<section class="stores" id="stores" data-theme="light">
+  <div class="stores__head container">
+    <p class="label label--line" data-reveal>{c.storesLabel}</p>
+    <h2 class="display" data-split set:html={c.storesTitle} />
+    <p class="kr-title kr-title--sm" data-reveal>{c.storesKr}</p>
+  </div>
+
+  <div class="stores__grid container">
+    {cards.map(({ s, img, main }) => (
+      <article class:list={['store-card', main && 'store-card--main']} data-reveal>
+        <a class="store-card__img" href={href(lang, `/stores/${s.id}`)} aria-label={`${s.name[lang]} — ${t.storeGuide}`}>
+          <Img name={img} alt="" sizes={main ? '(max-width: 767px) 100vw, 58vw' : '(max-width: 767px) 100vw, 36vw'} class="cover" />
+          <span class="store-card__badge">{s.badge[lang]}</span>
+        </a>
+        <div class="store-card__body">
+          <h3 class="store-card__name">{s.name[lang]}</h3>
+          <dl class="info">
+            <div><dt>{t.address}</dt><dd>{s.address[lang]}</dd></div>
+            <div><dt>{t.hours}</dt><dd>{s.hours[lang]} <span class="muted">(L.O. {s.lastOrder})</span></dd></div>
+            {s.phone && <div><dt>{t.phone}</dt><dd><a href={`tel:${s.phone}`}>{s.phone}</a></dd></div>}
+            <div><dt>{t.parking}</dt><dd>{s.parking[lang]}</dd></div>
+          </dl>
+          <a class="link-arrow" href={href(lang, `/stores/${s.id}`)}>{t.storeGuide}</a>
+          <StoreActions store={s} lang={lang} compact />
+        </div>
+      </article>
+    ))}
+  </div>
+</section>

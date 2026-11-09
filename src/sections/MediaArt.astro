@@ -1,0 +1,51 @@
+---
+import Img from '../components/Img.astro';
+import { home, type Lang } from '../data/site';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const c = home[lang];
+---
+
+<section class="media" id="media-art" data-theme="dark" data-media>
+  <div class="media__pin">
+    <div class="media__image" data-media-image>
+      <Img name="f1-ocean" alt={lang === 'ko' ? '산호와 물고기가 흐르는 1층 미디어아트 파노라마 월' : 'Ground-floor panoramic media art wall showing coral and fish'} sizes="100vw" />
+    </div>
+    <svg class="media__mask" data-media-mask aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <mask id="media-mask" maskUnits="userSpaceOnUse">
+          <rect class="media__mask-bg" x="0" y="0" width="100%" height="100%" fill="#fff" />
+          <g data-media-word>
+            <text class="media__mask-text" text-anchor="middle" fill="#000">
+              <tspan data-media-l1>MEDIA ART</tspan>
+              <tspan data-media-l2></tspan>
+            </text>
+          </g>
+        </mask>
+      </defs>
+      <rect x="0" y="0" width="100%" height="100%" fill="#0c0c0d" mask="url(#media-mask)" data-media-cover />
+    </svg>
+    <div class="media__caption container" data-media-caption>
+      <p class="label label--line">{c.mediaLabel}</p>
+      <h2 class="kr-title">{c.mediaTitle}</h2>
+      <p class="body-text">{c.mediaBody}</p>
+    </div>
+  </div>
+
+  <div class="media__themes container">
+    {c.themes.map((th, i) => (
+      <figure class="theme-card" data-reveal="img">
+        <div class="theme-card__img">
+          <Img name={th.image} alt="" sizes="(max-width: 767px) 100vw, 25vw" class="cover" />
+        </div>
+        <figcaption>
+          <span class="theme-card__idx">{String(i + 1).padStart(2, '0')}</span>
+          <span class="theme-card__name">{th.name}</span>
+          <span class="theme-card__kr">{th.kr}</span>
+        </figcaption>
+      </figure>
+    ))}
+    <p class="media__note">* {c.mediaNote}</p>
+  </div>
+</section>

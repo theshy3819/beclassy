@@ -1,0 +1,15 @@
+---
+import { mapLinks, ui, type Lang, type Store } from '../data/site';
+
+interface Props { store: Store; lang: Lang; compact?: boolean }
+const { store, lang, compact = false } = Astro.props;
+const t = ui[lang];
+const m = mapLinks(store);
+---
+
+<div class:list={['actions', compact && 'actions--compact']}>
+  <a class="btn" href={m.naver} target="_blank" rel="noopener">{t.naverMap}</a>
+  <a class="btn" href={m.kakao} target="_blank" rel="noopener">{t.kakaoMap}</a>
+  {!compact && <a class="btn" href={m.google} target="_blank" rel="noopener">{t.googleMap}</a>}
+  {store.phone && <a class="btn btn--solid" href={`tel:${store.phone}`}>{t.call}</a>}
+</div>

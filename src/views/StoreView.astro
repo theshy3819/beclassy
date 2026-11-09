@@ -1,0 +1,113 @@
+---
+import Base from '../layouts/Base.astro';
+import Img from '../components/Img.astro';
+import StoreActions from '../components/StoreActions.astro';
+import { stores, floors, ui, brand, type Lang, type StoreId } from '../data/site';
+import { href } from '../lib/paths';
+
+interface Props { lang: Lang; id: StoreId }
+const { lang, id } = Astro.props;
+const s = stores[id];
+const t = ui[lang];
+const other = stores[id === 'eulwangni' ? 'naju' : 'eulwangni'];
+
+const gallery: Record<StoreId, { name: string; alt: string }[]> = {
+  eulwangni: [
+    { name: 'f1-atrium', alt: lang === 'ko' ? '층고 높은 1층 아트리움과 롱 테이블' : 'Double-height atrium with long tables' },
+    { name: 'f1-cosmos', alt: lang === 'ko' ? '우주 테마 미디어아트 큐브' : 'Cosmos-themed media art cube' },
+    { name: 'f2-showcase', alt: lang === 'ko' ? '2층 베이커리 카운터' : 'Second-floor bakery counter' },
+    { name: 'f3-lounge', alt: lang === 'ko' ? '숲이 보이는 3층 좌석' : 'Third-floor seating facing the trees' },
+    { name: 'aerial-night', alt: lang === 'ko' ? '야간 항공 촬영 외관' : 'Aerial view at night' },
+    { name: 'arch-wall', alt: lang === 'ko' ? 'BECLASSY 레터링 콘크리트 벽' : 'Concrete wall with BECLASSY lettering' },
+  ],
+  naju: [
+    { name: 'naju-view', alt: lang === 'ko' ? '통창 너머 영산강 들판이 보이는 단체석' : 'Long table facing the Yeongsan river plain' },
+    { name: 'naju-terrace', alt: lang === 'ko' ? '강변을 내려다보는 야외 테라스' : 'Outdoor terrace over the riverside' },
+    { name: 'naju-rooftop', alt: lang === 'ko' ? '노을 지는 루프탑' : 'Rooftop at sunset' },
+    { name: 'naju-bakery', alt: lang === 'ko' ? '베이커리 쇼케이스' : 'Bakery showcase' },
+    { name: 'naju-bar', alt: lang === 'ko' ? '에스프레소 머신과 원두' : 'Espresso machine and beans' },
+    { name: 'naju-lounge', alt: lang === 'ko' ? '강변이 보이는 라운지' : 'Lounge facing the river' },
+  ],
+};
+const heroImg = id === 'eulwangni' ? 'ext-monolith' : 'naju-day';
+const meta = {
+  ko: { title: `${s.name.ko} | 비클래시 BECLASSY`, description: `${s.intro.ko} ${s.address.ko} · ${s.hours.ko}` },
+  en: { title: `${s.name.en} | BECLASSY`, description: `${s.intro.en} ${s.address.en} · ${s.hours.en}` },
+}[lang];
+---
+
+<Base lang={lang} path={`/stores/${id}`} title={meta.title} description={meta.description}>
+  <section class="page-hero" data-theme="dark">
+    <div class="page-hero__img" aria-hidden="true">
+      <Img name={heroImg} alt="" sizes="100vw" loading="eager" fetchpriority="high" />
+    </div>
+    <div class="page-hero__inner container">
+      <p class="label label--line">{s.badge[lang]}</p>
+      <h1 class="display" data-split>{s.short.en.toUpperCase()}</h1>
+      <p class="kr-title kr-title--sm">{s.name[lang]}</p>
+    </div>
+  </section>
+
+  <section class="store-info container" data-theme="light">
+    <p class="store-info__intro" data-reveal>{s.intro[lang]}</p>
+    <div class="store-info__grid">
+      <dl class="info info--lg" data-reveal>
+        <div><dt>{t.address}</dt><dd>{s.address[lang]}</dd></div>
+        <div><dt>{t.hours}</dt><dd>{s.hours[lang]}<br /><span class="muted">{t.lastOrder} {s.lastOrder}</span></dd></div>
+        {s.phone
+          ? <div><dt>{t.phone}</dt><dd><a href={`tel:${s.phone}`}>{s.phone}</a></dd></div>
+          : <div><dt>{t.inquiry}</dt><dd>{brand.kakao[lang]}</dd></div>}
+        <div><dt>{t.parking}</dt><dd>{s.parking[lang]}</dd></div>
+      </dl>
+      <div class="store-info__lists" data-reveal>
+        <h2 class="label">{t.facilities}</h2>
+        <ul class="chips">{s.facilities[lang].map((f) => <li>{f}</li>)}</ul>
+        <h2 class="label">{t.notes}</h2>
+        <ul class="bullets">{s.notes[lang].map((n) => <li>{n}</li>)}</ul>
+      </div>
+    </div>
+    <div class="store-info__actions" data-reveal>
+      <p class="label">{t.directions}</p>
+      <StoreActions store={s} lang={lang} />
+    </div>
+  </section>
+
+  {id === 'eulwangni' && (
+    <section class="store-floors container" data-theme="light" aria-label={t.floorsTitle}>
+      <p class="label label--line" data-reveal>{t.floorsTitle}</p>
+      <ol class="store-floors__list">
+        {floors.map((f) => (
+          <li class="store-floor" data-reveal>
+            <div class="store-floor__img">
+              <Img name={f.image} alt={f.alt[lang]} sizes="(max-width: 767px) 100vw, 40vw" class="cover" />
+            </div>
+            <div class="store-floor__text">
+              <span class="store-floor__level">{f.level}</span>
+              <h2>{f.name}</h2>
+              <p class="muted">{f.kr}</p>
+              <p>{f.desc[lang]}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+  )}
+
+  <section class="store-gallery" data-theme="light">
+    <div class="store-gallery__grid container">
+      {gallery[id].map((g, i) => (
+        <figure class:list={['store-gallery__item', `store-gallery__item--${i + 1}`]} data-reveal="img">
+          <Img name={g.name} alt={g.alt} sizes="(max-width: 767px) 100vw, 50vw" class="cover" />
+        </figure>
+      ))}
+    </div>
+  </section>
+
+  <section class="store-next" data-theme="dark">
+    <a class="store-next__link container" href={href(lang, `/stores/${other.id}`)}>
+      <span class="label">NEXT STORE</span>
+      <span class="display">{other.short.en.toUpperCase()}</span>
+      <span class="link-arrow">{other.name[lang]}</span>
+    </a>
+  </section>
+</Base>

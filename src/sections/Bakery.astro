@@ -1,0 +1,57 @@
+---
+import Img from '../components/Img.astro';
+import { bakes, home, ui, type Lang } from '../data/site';
+import { href } from '../lib/paths';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const c = home[lang];
+const t = ui[lang];
+---
+
+<section class="bakery" id="bakery" data-theme="light">
+  <div class="bakery__intro container">
+    <div class="bakery__text">
+      <p class="label label--line" data-reveal>{c.bakeryLabel}</p>
+      <h2 class="display" data-split set:html={c.bakeryTitle} />
+      <p class="kr-title kr-title--sm" data-reveal>{c.bakeryKr}</p>
+      <p class="body-text" data-reveal>{c.bakeryBody}</p>
+    </div>
+    <figure class="bakery__make bakery__make--a" data-reveal="img" data-parallax="-8">
+      <Img name="make-oven" alt={lang === 'ko' ? '오븐에서 막 꺼낸 크루아상' : 'Croissants just out of the oven'} sizes="(max-width: 767px) 100vw, 34vw" class="cover" />
+    </figure>
+    <figure class="bakery__make bakery__make--b" data-reveal="img" data-parallax="10">
+      <Img name="make-dough" alt={lang === 'ko' ? '밀가루를 뿌리며 반죽을 다루는 손' : 'Hands working dough under a dusting of flour'} sizes="(max-width: 767px) 60vw, 22vw" class="cover" />
+      <figcaption>{c.bakeryCaption}</figcaption>
+    </figure>
+  </div>
+
+  <div class="rail" data-rail>
+    <div class="rail__track" data-rail-track>
+      {bakes.map((b, i) => (
+        <article class="bake-card">
+          <div class="bake-card__img">
+            <Img name={b.id} alt={lang === 'ko' ? b.ko : b.en} sizes="(max-width: 767px) 72vw, 26vw" widths={[480, 800, 1200]} class="cover" />
+          </div>
+          <div class="bake-card__body">
+            <span class="bake-card__idx">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="bake-card__name">{lang === 'ko' ? b.ko : b.en}</h3>
+            <p class="bake-card__en">{lang === 'ko' ? b.en : b.ko}</p>
+            {b.desc && <p class="bake-card__desc">{b.desc[lang]}</p>}
+          </div>
+        </article>
+      ))}
+      <a class="bake-card bake-card--more" href={href(lang, '/menu#bakery')}>
+        <span class="bake-card__more-text">{t.otherBakes}</span>
+        <span class="link-arrow">{t.viewMenu}</span>
+      </a>
+    </div>
+  </div>
+
+  <figure class="bakery__showcase" data-showcase>
+    <div class="bakery__showcase-img" data-parallax-img>
+      <Img name="show-croissant" alt={lang === 'ko' ? '쇼케이스에 가득 놓인 크루아상' : 'A showcase full of croissants'} sizes="100vw" />
+    </div>
+    <figcaption class="container"><span class="label">{c.showcaseCaption}</span></figcaption>
+  </figure>
+</section>

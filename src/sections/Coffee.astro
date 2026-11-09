@@ -1,0 +1,64 @@
+---
+import Img from '../components/Img.astro';
+import { blends, signatures, home, ui, type Lang } from '../data/site';
+import { href, asset } from '../lib/paths';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const c = home[lang];
+const t = ui[lang];
+---
+
+<section class="coffee" id="coffee" data-theme="dark" data-coffee style={`--blend:${blends[0].color}`}>
+  <div class="coffee__bg" aria-hidden="true">
+    <video class="cover" data-autoplay muted loop playsinline preload="none" poster={asset('media/espresso-poster.jpg')}>
+      <source src={asset('media/espresso.mp4')} type="video/mp4" />
+    </video>
+  </div>
+
+  <div class="coffee__inner container">
+    <div class="coffee__head">
+      <p class="label label--line" data-reveal>{c.coffeeLabel}</p>
+      <h2 class="display" data-split set:html={c.coffeeTitle} />
+      <p class="kr-title kr-title--sm" data-reveal>{c.coffeeKr}</p>
+      <p class="body-text" data-reveal>{c.coffeeBody}</p>
+    </div>
+
+    <ul class="blends" data-blends>
+      {blends.map((b, i) => (
+        <li>
+          <button class="blend" type="button" data-blend={b.color} aria-pressed={i === 0 ? 'true' : 'false'} data-reveal>
+            <span class="blend__dot" style={`--c:${b.color}`} aria-hidden="true"></span>
+            <span class="blend__name">{b.name}</span>
+            <span class="blend__kr">{b.kr}</span>
+            <span class="blend__note">{b.note[lang]}</span>
+          </button>
+        </li>
+      ))}
+    </ul>
+
+    <div class="sig">
+      <p class="label label--line" data-reveal>{c.signatureLabel}</p>
+      <div class="sig__grid">
+        {signatures.map((s) => (
+          <article class="sig-card" data-reveal>
+            <div class:list={['sig-card__img', !s.image && 'sig-card__img--bloom']}>
+              {s.image
+                ? <Img name={s.image} alt={lang === 'ko' ? s.ko : s.en} sizes="(max-width: 767px) 86vw, 28vw" widths={[480, 800, 1200]} class="cover" />
+                : <span class="sig-card__bloom" aria-hidden="true">MYSTIC<br />BLOOM</span>}
+            </div>
+            <div class="sig-card__body">
+              {s.tag && <span class="tag">{s.tag[lang]}</span>}
+              <h3>{lang === 'ko' ? s.ko : s.en}<span class="sig-card__price">{s.price}</span></h3>
+              <p>{s.desc?.[lang]}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+      <div class="coffee__foot" data-reveal>
+        <p>{c.retail}</p>
+        <a class="btn btn--light" href={href(lang, '/menu')}>{t.viewMenu}</a>
+      </div>
+    </div>
+  </div>
+</section>

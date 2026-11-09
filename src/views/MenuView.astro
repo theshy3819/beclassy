@@ -1,0 +1,85 @@
+---
+import Base from '../layouts/Base.astro';
+import Img from '../components/Img.astro';
+import { menu, bakes, ui, type Lang } from '../data/site';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = ui[lang];
+const meta = {
+  ko: { title: '메뉴 | 비클래시 BECLASSY', description: '비클래시 시그니처 음료, 직접 로스팅한 세 가지 블렌드 커피, 논커피·티, 매일 굽는 베이커리와 원두 메뉴.' },
+  en: { title: 'Menu | BECLASSY', description: 'BECLASSY signature drinks, coffee from three house-roasted blends, non-coffee and tea, daily bakes and beans to take home.' },
+}[lang];
+const name = (i: { ko: string; en: string }) => (lang === 'ko' ? i.ko : i.en);
+const sub = (i: { ko: string; en: string }) => (lang === 'ko' ? i.en : i.ko);
+const groups = [...menu.slice(0, 4), { id: 'bakery', title: 'BAKERY', kr: lang === 'ko' ? '베이커리' : 'Bakery' }, menu[4]];
+---
+
+<Base lang={lang} path="/menu" title={meta.title} description={meta.description} ogImage="media/espresso-poster.jpg">
+  <section class="page-hero page-hero--menu" data-theme="dark">
+    <div class="page-hero__img" aria-hidden="true">
+      <Img name="f2-counter" alt="" sizes="100vw" loading="eager" fetchpriority="high" />
+    </div>
+    <div class="page-hero__inner container">
+      <p class="label label--line">BECLASSY</p>
+      <h1 class="display" data-split>MENU</h1>
+      <nav class="menu-tabs" aria-label="Menu categories">
+        {groups.map((g) => <a href={`#${g.id}`}>{g.title}</a>)}
+      </nav>
+    </div>
+  </section>
+
+  <div class="menu-page container" data-theme="light">
+    {groups.map((g) => g.id === 'bakery' ? (
+      <section class="menu-group menu-group--bakery" id="bakery" aria-labelledby="mg-bakery">
+        <header class="menu-group__head">
+          <h2 id="mg-bakery" class="menu-group__title">BAKERY</h2>
+          <p class="menu-group__kr">{lang === 'ko' ? '베이커리' : 'Baked daily'}</p>
+          <p class="menu-group__note">{t.bakeryPriceNote}</p>
+        </header>
+        <ul class="bake-grid">
+          {bakes.map((b) => (
+            <li class="bake-tile" data-reveal>
+              <div class="bake-tile__img">
+                <Img name={b.id} alt={name(b)} sizes="(max-width: 767px) 50vw, 22vw" widths={[400, 800, 1200]} class="cover" />
+              </div>
+              <h3>{name(b)}</h3>
+              <p class="muted">{sub(b)}</p>
+              {b.desc && <p class="bake-tile__desc">{b.desc[lang]}</p>}
+            </li>
+          ))}
+        </ul>
+        <p class="menu-group__note">{t.otherBakes}</p>
+      </section>
+    ) : (
+      <section class="menu-group" id={g.id} aria-labelledby={`mg-${g.id}`}>
+        <header class="menu-group__head">
+          <h2 id={`mg-${g.id}`} class="menu-group__title">{g.title}</h2>
+          <p class="menu-group__kr">{lang === 'ko' ? g.kr : ''}</p>
+          {'note' in g && g.note && <p class="menu-group__note">{g.note[lang]}</p>}
+        </header>
+        <ul class="menu-list">
+          {'items' in g && g.items.map((i) => (
+            <li class="menu-item" data-reveal>
+              {i.image && (
+                <div class="menu-item__img">
+                  <Img name={i.image} alt={name(i)} sizes="96px" widths={[192, 400]} class="cover" />
+                </div>
+              )}
+              <div class="menu-item__text">
+                <h3>
+                  {name(i)}
+                  {i.tag && <span class="tag tag--dark">{i.tag[lang]}</span>}
+                </h3>
+                <p class="muted">{sub(i)}</p>
+                {i.desc && <p class="menu-item__desc">{i.desc[lang]}</p>}
+              </div>
+              {i.price && <p class="menu-item__price">{i.price}</p>}
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+    <p class="menu-page__note">{t.priceNote}</p>
+  </div>
+</Base>

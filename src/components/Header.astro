@@ -1,0 +1,81 @@
+---
+import Logo from './Logo.astro';
+import { ui, stores, brand, type Lang } from '../data/site';
+import { href, altHref } from '../lib/paths';
+
+interface Props {
+  lang: Lang;
+  path: string;
+}
+const { lang, path } = Astro.props;
+const t = ui[lang];
+const home = href(lang, '/');
+const links = [
+  { label: t.nav.space, to: `${home}#floors` },
+  { label: t.nav.media, to: `${home}#media-art` },
+  { label: t.nav.bakery, to: `${home}#bakery` },
+  { label: t.nav.coffee, to: `${home}#coffee` },
+  { label: t.nav.menu, to: href(lang, '/menu') },
+  { label: t.nav.stores, to: `${home}#stores` },
+];
+const other = altHref(lang, path);
+const e = stores.eulwangni;
+const n = stores.naju;
+---
+
+<a class="skip-link" href="#main">{t.skip}</a>
+
+<header class="site-header" data-header data-tone="light">
+  <a class="site-header__logo" href={home} aria-label="BECLASSY home">
+    <Logo />
+  </a>
+  <nav class="site-header__nav" aria-label="Primary">
+    <ul>
+      {links.map((l) => <li><a href={l.to}>{l.label}</a></li>)}
+    </ul>
+  </nav>
+  <div class="site-header__util">
+    <div class="lang" role="group" aria-label={t.langLabel}>
+      <a href={lang === 'ko' ? '#' : other} aria-current={lang === 'ko' ? 'true' : undefined} lang="ko">KO</a>
+      <span aria-hidden="true">/</span>
+      <a href={lang === 'en' ? '#' : other} aria-current={lang === 'en' ? 'true' : undefined} lang="en">EN</a>
+    </div>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="site-menu" data-menu-toggle
+      data-label-open={t.menuOpen} data-label-close={t.menuClose}>
+      <span class="sr-only" data-menu-label>{t.menuOpen}</span>
+      <span class="menu-btn__bar" aria-hidden="true"></span>
+      <span class="menu-btn__bar" aria-hidden="true"></span>
+    </button>
+  </div>
+</header>
+
+<div class="site-menu" id="site-menu" data-menu hidden>
+  <div class="site-menu__bg" aria-hidden="true"></div>
+  <nav class="site-menu__nav" aria-label="Menu">
+    <ol>
+      {links.map((l, i) => (
+        <li>
+          <a href={l.to} data-menu-link>
+            <span class="site-menu__idx">{String(i + 1).padStart(2, '0')}</span>
+            <span class="site-menu__label">{l.label}</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </nav>
+  <div class="site-menu__info">
+    <div>
+      <p class="label">{e.short[lang]}</p>
+      <p>{e.hours[lang]}</p>
+      {e.phone && <p><a href={`tel:${e.phone}`}>{e.phone}</a></p>}
+    </div>
+    <div>
+      <p class="label">{n.short[lang]}</p>
+      <p>{n.hours[lang]}</p>
+    </div>
+    <div>
+      <p class="label">INSTAGRAM</p>
+      <p><a href={brand.instagram} target="_blank" rel="noopener">{brand.instagramHandle}</a></p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+---
+import Logo from './Logo.astro';
+import { ui, stores, brand, type Lang } from '../data/site';
+import { href, altHref } from '../lib/paths';
+
+interface Props {
+  lang: Lang;
+  path: string;
+}
+const { lang, path } = Astro.props;
+const t = ui[lang];
+const list = [stores.eulwangni, stores.naju];
+---
+
+<footer class="site-footer" data-theme="dark">
+  <div class="site-footer__top container">
+    <div class="site-footer__brand">
+      <p class="site-footer__slogan">{brand.slogan[lang]}</p>
+      <p class="site-footer__promise">{brand.promise[lang]}</p>
+    </div>
+    {list.map((s) => (
+      <div class="site-footer__store">
+        <p class="label">{s.short[lang]}</p>
+        <p>{s.address[lang]}</p>
+        <p>{s.hours[lang]} <span class="muted">(L.O. {s.lastOrder})</span></p>
+        {s.phone && <p><a href={`tel:${s.phone}`}>{s.phone}</a></p>}
+        <p><a href={href(lang, `/stores/${s.id}`)} class="link-arrow">{t.storeGuide}</a></p>
+      </div>
+    ))}
+    <div class="site-footer__contact">
+      <p class="label">{t.inquiry}</p>
+      <p>{brand.kakao[lang]}</p>
+      <p><a href={brand.instagram} target="_blank" rel="noopener">Instagram {brand.instagramHandle}</a></p>
+      <p><a href={altHref(lang, path)}>{lang === 'ko' ? 'English' : '한국어'}</a></p>
+    </div>
+  </div>
+  <div class="site-footer__mark" aria-hidden="true" data-footer-mark>
+    <Logo />
+  </div>
+  <div class="site-footer__bottom container">
+    <p>© {new Date().getFullYear()} BECLASSY. All rights reserved.</p>
+    <a href="#top" class="link-arrow link-arrow--up">TOP</a>
+  </div>
+</footer>

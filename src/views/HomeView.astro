@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../sections/Hero.astro';
+import Statement from '../sections/Statement.astro';
+import Architecture from '../sections/Architecture.astro';
+import Floors from '../sections/Floors.astro';
+import MediaArt from '../sections/MediaArt.astro';
+import Bakery from '../sections/Bakery.astro';
+import Coffee from '../sections/Coffee.astro';
+import Stores from '../sections/Stores.astro';
+import type { Lang } from '../data/site';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const meta = {
+  ko: {
+    title: '비클래시 BECLASSY | 을왕리 미디어아트 베이커리 카페',
+    description: '인천 을왕리 바다 곁, 4개 층의 미디어아트 갤러리형 베이커리 카페 비클래시. 매일 굽는 빵, 직접 로스팅한 스페셜티 커피, 테라스와 루프탑. 나주점도 함께 운영합니다.',
+  },
+  en: {
+    title: 'BECLASSY | Media Art Bakery Café in Eulwangni, Incheon',
+    description: 'A four-storey bakery café by the Eulwangni coast near Incheon Airport — immersive media art, bread baked daily, coffee roasted in-house, a terrace and a rooftop. Also in Naju.',
+  },
+}[lang];
+---
+
+<Base lang={lang} path="/" title={meta.title} description={meta.description} loader>
+  <Hero lang={lang} />
+  <Statement lang={lang} />
+  <Architecture lang={lang} />
+  <Floors lang={lang} />
+  <MediaArt lang={lang} />
+  <Bakery lang={lang} />
+  <Coffee lang={lang} />
+  <Stores lang={lang} />
+</Base>

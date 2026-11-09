@@ -1,0 +1,93 @@
+---
+import '@fontsource-variable/antonio';
+import 'pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css';
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Loader from '../components/Loader.astro';
+import { stores, brand, type Lang } from '../data/site';
+import { href, asset } from '../lib/paths';
+
+interface Props {
+  lang: Lang;
+  /** Locale-free path, e.g. '/', '/menu', '/stores/naju' */
+  path: string;
+  title: string;
+  description: string;
+  ogImage?: string;
+  loader?: boolean;
+}
+
+const { lang, path, title, description, ogImage = 'media/hero-poster.jpg', loader = false } = Astro.props;
+const site = Astro.site ?? new URL('https://theshy3819.github.io');
+const abs = (p: string) => new URL(p, site).toString();
+const canonical = abs(href(lang, path));
+const koUrl = abs(href('ko', path));
+const enUrl = abs(href('en', path));
+
+const ld = {
+  '@context': 'https://schema.org',
+  '@graph': Object.values(stores).map((s) => ({
+    '@type': 'CafeOrCoffeeShop',
+    name: s.name[lang],
+    url: abs(href(lang, `/stores/${s.id}`)),
+    address: { '@type': 'PostalAddress', streetAddress: s.address.ko, addressCountry: 'KR' },
+    geo: { '@type': 'GeoCoordinates', latitude: s.lat, longitude: s.lng },
+    openingHoursSpecification: [{
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+      opens: s.open,
+      closes: s.close,
+    }],
+    ...(s.phone ? { telephone: s.phone } : {}),
+    servesCuisine: ['Coffee', 'Bakery'],
+    sameAs: [brand.instagram],
+  })),
+};
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="ko" href={koUrl} />
+    <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="x-default" href={koUrl} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="BECLASSY" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={abs(asset(ogImage))} />
+    <meta property="og:locale" content={lang === 'ko' ? 'ko_KR' : 'en_US'} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#0c0c0d" />
+    <link rel="icon" href={asset('favicon.svg')} type="image/svg+xml" />
+    <script is:inline>
+      (function () {
+        var d = document.documentElement;
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        d.classList.add(reduce ? 'rm' : 'motion', 'js');
+        try { if (sessionStorage.getItem('bc-intro')) d.classList.add('seen'); } catch (e) {}
+        // If the main script never boots, reveal everything rather than leave content hidden.
+        setTimeout(function () { if (!window.__bcReady) d.classList.remove('js', 'motion'); }, 4000);
+      })();
+    </script>
+    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  </head>
+  <body>
+    {loader && <Loader />}
+    <Header lang={lang} path={path} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer lang={lang} path={path} />
+    <script>
+      import '../scripts/main';
+    </script>
+  </body>
+</html>

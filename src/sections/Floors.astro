@@ -1,0 +1,48 @@
+---
+import Img from '../components/Img.astro';
+import { floors, home, type Lang } from '../data/site';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const c = home[lang];
+const total = String(floors.length).padStart(2, '0');
+---
+
+<section class="floors" id="floors" data-theme="dark" data-floors style={`--n:${floors.length}`}>
+  <div class="floors__pin">
+    <div class="floors__top container">
+      <p class="label label--line">{c.floorsLabel}</p>
+      <p class="floors__hint">{c.floorsHint}</p>
+    </div>
+
+    <div class="floors__window" aria-hidden="true">
+      {floors.map((f, i) => (
+        <div class="floors__img" data-floor-img={i}>
+          <Img name={f.image} alt="" sizes="(max-width: 767px) 100vw, 64vw" />
+        </div>
+      ))}
+    </div>
+
+    <ol class="floors__drum" data-floor-drum>
+      {floors.map((f, i) => (
+        <li class="floors__row" data-floor-row={i}>
+          <span class="floors__level">{f.level}</span>
+          <span class="floors__name">{f.name}</span>
+          <span class="floors__kr">{f.kr}</span>
+        </li>
+      ))}
+    </ol>
+
+    <div class="floors__descs">
+      {floors.map((f, i) => (
+        <div class="floors__desc" data-floor-desc={i}>
+          <p class="floors__desc-title">{f.level} · {lang === 'ko' ? f.kr : f.name}</p>
+          <p>{f.desc[lang]}</p>
+          <span class="sr-only">{f.alt[lang]}</span>
+        </div>
+      ))}
+    </div>
+
+    <p class="floors__count" aria-hidden="true"><span data-floor-current>01</span> / {total}</p>
+  </div>
+</section>
