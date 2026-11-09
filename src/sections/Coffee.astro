@@ -42,10 +42,10 @@ const t = ui[lang];
       <div class="sig__grid">
         {signatures.map((s) => (
           <article class="sig-card" data-reveal>
-            <div class:list={['sig-card__img', !s.image && 'sig-card__img--bloom']}>
+            <div class:list={['sig-card__img', (s.cutout || !s.image) && 'sig-card__img--bloom']}>
               {s.image
-                ? <Img name={s.image} alt={lang === 'ko' ? s.ko : s.en} sizes="(max-width: 767px) 86vw, 28vw" widths={[480, 800, 1200]} class="cover" />
-                : <span class="sig-card__bloom" aria-hidden="true">MYSTIC<br />BLOOM</span>}
+                ? <Img name={s.image} alt={lang === 'ko' ? s.ko : s.en} sizes="(max-width: 767px) 86vw, 28vw" widths={s.cutout ? [344] : [480, 800, 1200]} class={s.cutout ? 'contain' : 'cover'} />
+                : <span class="sig-card__bloom" aria-hidden="true">{s.en}</span>}
             </div>
             <div class="sig-card__body">
               {s.tag && <span class="tag">{s.tag[lang]}</span>}

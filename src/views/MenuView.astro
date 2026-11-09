@@ -63,7 +63,7 @@ const groups = [...menu.slice(0, 4), { id: 'bakery', title: 'BAKERY', kr: lang =
             <li class="menu-item" data-reveal>
               {i.image && (
                 <div class="menu-item__img">
-                  <Img name={i.image} alt={name(i)} sizes="96px" widths={[192, 400]} class="cover" />
+                  <Img name={i.image} alt={name(i)} sizes="96px" widths={i.cutout ? [192, 344] : [192, 400]} class={i.cutout ? 'contain' : 'cover'} />
                 </div>
               )}
               <div class="menu-item__text">

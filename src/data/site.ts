@@ -206,6 +206,8 @@ export interface MenuItem {
   desc?: L10n;
   tag?: L10n;
   image?: string;
+  /** Image is a transparent cut-out (shown whole, on a colour field) rather than a photo to crop. */
+  cutout?: boolean;
 }
 
 export interface MenuGroup {
@@ -219,7 +221,7 @@ export interface MenuGroup {
 const iceOnly: L10n = { ko: 'ICE ONLY', en: 'ICE ONLY' };
 
 export const signatures: MenuItem[] = [
-  { ko: '미스틱블룸', en: 'Mystic Bloom', price: '8,800', tag: iceOnly, desc: { ko: '미스틱 바이올렛 커피크림과 은은한 플로럴 아로마의 라떼', en: 'A latte of Mystic Violet coffee cream with a soft floral aroma' } },
+  { ko: '미스틱블룸', en: 'Mystic Bloom', price: '8,800', tag: iceOnly, image: 'dr-mystic-bloom', cutout: true, desc: { ko: '미스틱 바이올렛 커피크림과 은은한 플로럴 아로마의 라떼', en: 'A latte of Mystic Violet coffee cream with a soft floral aroma' } },
   { ko: '소보루라떼', en: 'Soboro Latte', price: '8,500', image: 'dr-soboro', desc: { ko: '젯블랙과 시나몬, 고소한 소보루가 어우러지는 크림라떼', en: 'Jet Black, cinnamon and nutty soboro crumble in a cream latte' } },
   { ko: '웨스턴라이트', en: 'Western Light', price: '8,500', image: 'dr-western', tag: { ko: '을왕리점 한정 · ICE ONLY', en: 'EULWANGNI ONLY · ICE ONLY' }, desc: { ko: '석양이 떠오르는 다채로운 색감의 달콤상큼한 음료', en: 'Sweet and bright, layered in the colours of a West Sea sunset' } },
 ];

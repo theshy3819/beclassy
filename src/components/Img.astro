@@ -12,10 +12,11 @@ interface Props {
   fetchpriority?: 'high' | 'low' | 'auto';
 }
 
-const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/img/*.jpg', { eager: true });
+const images = import.meta.glob<{ default: ImageMetadata }>('/src/assets/img/*.{jpg,png}', { eager: true });
 
 const { name, alt, sizes = '100vw', widths, class: className, loading = 'lazy', fetchpriority } = Astro.props;
-const entry = images[`/src/assets/img/${name}.jpg`];
+// PNGs are transparent cut-outs; WebP keeps their alpha.
+const entry = images[`/src/assets/img/${name}.jpg`] ?? images[`/src/assets/img/${name}.png`];
 if (!entry) throw new Error(`Image not found: ${name}`);
 const src = entry.default;
 const defaultWidths = [480, 800, 1200, 1600, 2000, 2400].filter((w) => w <= src.width);
